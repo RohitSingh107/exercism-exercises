@@ -1,12 +1,20 @@
 module Anagram (anagramsFor) where
 
-import Data.List as L
 import Data.Char (toLower)
+import Data.List as L
 
 anagramsFor :: String -> [String] -> [String]
 anagramsFor _ [] = []
-anagramsFor s (x:xs)
-  | map toLower s == map toLower x = anagramsFor s xs
-  | (L.sort . map toLower) s == (L.sort . map toLower) x = x : anagramsFor s xs
-  | otherwise = anagramsFor s xs
+anagramsFor s xs = anagramsFor' loweredS sortedLoweredS xs 
+  where loweredS = map toLower s
+        sortedLoweredS = L.sort loweredS 
 
+
+anagramsFor' :: String -> String -> [String] -> [String]
+anagramsFor' _ _ [] = []
+anagramsFor' loweredS sortedLoweredS (x : xs)
+  | loweredS == loweredX = anagramsFor' loweredS sortedLoweredS xs
+  | sortedLoweredS == L.sort loweredX = x : anagramsFor' loweredS sortedLoweredS xs
+  | otherwise = anagramsFor' loweredS sortedLoweredS xs
+  where
+    loweredX = map toLower x
