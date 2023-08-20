@@ -31,7 +31,20 @@ mkRobot = Robot
 
 move :: Robot -> String -> Robot
 move r [] = r
-move  (Robot North (x,y)) (i:is) = undefined
-move  (Robot East (x,y)) (i:is) = undefined
-move  (Robot South (x,y)) (i:is) = undefined
-move  (Robot West (x,y)) (i:is) = undefined
+move  (Robot North (x,y)) (i:is) = case i of
+                                     'R' -> move (Robot East (x,y)) is
+                                     'L' -> move (Robot West (x,y)) is
+                                     _ -> move (Robot North (x,y+1)) is
+
+move  (Robot East (x,y)) (i:is) =  case i of
+                                     'R' -> move (Robot South (x,y)) is
+                                     'L' -> move (Robot North (x,y)) is
+                                     _ -> move (Robot East (x +1,y)) is
+move  (Robot South (x,y)) (i:is) = case i of
+                                     'R' -> move (Robot West (x,y)) is
+                                     'L' -> move (Robot East (x,y)) is
+                                     _ -> move (Robot South (x,y-1)) is
+move  (Robot West (x,y)) (i:is) =  case i of
+                                     'R' -> move (Robot North (x,y)) is
+                                     'L' -> move (Robot South (x,y)) is
+                                     _ -> move (Robot West (x-1,y)) is
