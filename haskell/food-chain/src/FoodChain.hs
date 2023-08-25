@@ -59,26 +59,30 @@ import qualified Data.Text as T
 --     \She's dead, of course!\n"
 
 song :: String
-song = ""
+-- song = T.unpack $ T.unlines $ intersperse "\n" $ blocks <$> [0..7]
+song = T.unpack $ T.unlines $ blocks <$> [0..7]
 
-swallowedToCatch :: Text -> Text -> Text
-swallowedToCatch swallow catch = "She swallowed the " `T.append` swallow `T.append` " to catch the " `T.append` catch `T.append` "."
+swallowText :: Text
+swallowText = "She swallowed the "
+
+catchText :: Text
+catchText = " to catch the "
 
 willDie :: Text
-willDie  = "I don't know why she swallowed the fly. Perhaps she'll die."
+willDie  = "I don't know why she swallowed the fly. Perhaps she'll die.\n"
 
 knowLady :: Text -> Text
-knowLady animal = "I know an old lady who swallowed a " `T.append` animal `T.append` "."
+knowLady animal = "I know an old lady who swallowed a " `T.append` animal `T.append` ".\n"
 
 reactions :: [Text]
 reactions = [
     ""
-  , "It wriggled and jiggled and tickled inside her."
-  , "How absurd to swallow a bird!"
-  , "Imagine that, to swallow a cat!"
-  , "What a hog, to swallow a dog!"
-  , "Just opened her throat and swallowed a goat!"
-  , "I don't know how she swallowed a cow!"
+  , "It wriggled and jiggled and tickled inside her.\n"
+  , "How absurd to swallow a bird!\n"
+  , "Imagine that, to swallow a cat!\n"
+  , "What a hog, to swallow a dog!\n"
+  , "Just opened her throat and swallowed a goat!\n"
+  , "I don't know how she swallowed a cow!\n"
   , ""
   ]
 
@@ -94,10 +98,17 @@ animals = [
   , "horse"
   ]
 
+swallowedToCatch :: Text -> Text -> Text
+swallowedToCatch swallow catch = swallowText `T.append` swallow `T.append` catchText `T.append` catch `T.append` ".\n"
+
+
+
 swallowChain :: Int -> Text
 swallowChain 1 = swallowedToCatch (animals !! 1)  (head animals)
-swallowChain i = swallowedToCatch (animals !! i) (animals !! (i-1)) `T.append` "\n" `T.append` swallowChain (i-1)
+swallowChain 2 = swallowText `T.append` (animals !! 2) `T.append` catchText `T.append` (animals !! 1) `T.append` " that wriggled and jiggled and tickled inside her.\n" `T.append` swallowChain 1
+swallowChain i = swallowedToCatch (animals !! i) (animals !! (i-1)) `T.append` swallowChain (i-1)
 
 blocks :: Int -> Text
+blocks 0 = knowLady (head animals) `T.append` willDie
 blocks 7 = T.append (knowLady (animals !! 7)) "She's dead, of course!"
-blocks i = knowLady (animals !! i) `T.append` "\n" `T.append` (reactions !! i) `T.append` "\n" `T.append` swallowChain i `T.append` willDie
+blocks i = knowLady (animals !! i) `T.append` (reactions !! i) `T.append` swallowChain i `T.append` willDie

@@ -1,20 +1,25 @@
-module Matrix (saddlePoints, potentialPoints) where
+module Matrix (saddlePoints) where
 
 import Data.Array (Array, bounds, (!))
+import Control.Monad (guard)
 
-saddlePoints :: Array i e -> [i]
-saddlePoints matrix = error "You need to implement this function."
-
-
-potentialPoints :: Array (Int,Int) Int -> [(Int, Int)]
-potentialPoints matrix = fromAllRows
+saddlePoints :: Array (Int, Int) Int -> [(Int, Int)]
+saddlePoints matrix = [(i,j) | i <- [1..rows], j <- [1..cols], let height = matrix ! (i,j), height == maximum [matrix ! (i, k) | k <- [1..cols]], height == minimum [matrix ! (k, j) | k <- [1..rows]]]
   where
-    ((ri,ci), (rows, cols)) = bounds matrix
+    (_, (rows, cols)) = bounds matrix
 
-    fromAllRows = [(r, fromRow r cols cols) | r <- [ri..rows]]
+{-
+saddlePoints :: Array (Int, Int) Int -> [(Int, Int)]
+saddlePoints matrix = do
+  i <- [1..rows]
+  j <- [1..cols]
+  let height = matrix ! (i, j)
 
-    fromRow _ 0 p = p
-    fromRow r c p = fromRow r (c-1) np
-      where np = if matrix ! (r,c) > (matrix ! (r,p)) then c else p
+ 
+  guard $ height == maximum [matrix ! (i, k) | k <- [1..cols]]
+  guard $ height == minimum [matrix ! (k, j) | k <- [1..rows]]
 
-
+  pure (i,j)
+  where
+    (_, (rows, cols)) = bounds matrix
+-}
