@@ -13,5 +13,7 @@ data Color =
   | White
   deriving (Eq, Show, Enum, Bounded)
 
+
+
 value :: (Color, Color) -> Int
-value (a, b) = error "You need to implement this function."
+value (a, b) = fromEnum a * 10 + fromEnum b
