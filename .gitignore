@@ -6,3 +6,4 @@
 *test*
 *bats*
 **/__pycache__
+*.nix
