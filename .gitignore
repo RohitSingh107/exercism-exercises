@@ -1,0 +1,8 @@
+**/.stack-work/
+**/.exercism/
+**/HELP.md
+**/HINTS.md
+**/README.md
+*test*
+*bats*
+**/__pycache__
